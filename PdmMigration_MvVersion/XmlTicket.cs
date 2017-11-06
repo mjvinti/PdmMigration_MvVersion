@@ -57,7 +57,7 @@ namespace PdmMigration_MvVersion
                     }
                 }
 
-                foreach (var i in kvp.Value)
+                foreach(var i in kvp.Value)
                 {
                     string filename = i.FileName;
 
@@ -79,12 +79,12 @@ namespace PdmMigration_MvVersion
                         }
                         else
                         {
-                            jobTicket.AppendLine("<!-- SKIPPING: " + filename + ", " + i.FilePath.Replace("/", "\\") + " -->");
+                            jobTicket.AppendLine("<!-- SKIPPING(OLDER DATE): " + filename + ", " + i.FilePath.Replace("/", "\\") + " -->");
                         }
                     }
                     else
                     {
-                        jobTicket.AppendLine("<!-- SKIPPING: " + filename + ", " + i.FilePath.Replace("/", "\\") + " -->");
+                        jobTicket.AppendLine("<!-- SKIPPING(NOT PDF-ABLE): " + filename + ", " + i.FilePath.Replace("/", "\\") + " -->");
                         Console.WriteLine("THIS IS NOT PDF-ABLE: " + filename + ", " + i.FilePath);
                     }
                 }

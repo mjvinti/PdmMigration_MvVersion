@@ -12,8 +12,8 @@ namespace PdmMigration_MvVersion
         public static string inputFile = @"C:\Users\mvinti\Desktop\PDM\PdmMigration_Remote_2017-11-03\EA\EA_2017-11-01.txt";
         public static string batchFile = @"C:\Users\mvinti\Desktop\PDM\PdmMigration_Remote_2017-11-03\EA\singlePdfCopy.bat";
         public static string serverName = "pdm.moog.com";
-        public static string outputFile = @"C:\Users\mvinti\Desktop\PDM\PdmMigration_Remote_2017-11-03\EA\EA_import_2017-11-01.txt";
-        public static string misfitToys = @"C:\Users\mvinti\Desktop\PDM\PdmMigration_Remote_2017-11-03\EA\EA_importMisfits_2017-11-01.txt";
+        public static string outputFile = @"C:\Users\mvinti\Desktop\PDM\PdmMigration_Remote_2017-11-03\EA\EA_import2_2017-11-01.txt";
+        public static string misfitToys = @"C:\Users\mvinti\Desktop\PDM\PdmMigration_Remote_2017-11-03\EA\EA_importMisfits2_2017-11-01.txt";
         public static string jobTicketLocation = @"C:\Users\mvinti\Desktop\PDM\PdmMigration_Remote_2017-11-03\EA\jobTickets\";
         public static string uncRawPrefix = @"\\eacmpnas01.moog.com\Vol5_Data\PDM\EA";
         public static string uncPdfPrefix = @"\\eacmpnas01.moog.com\Vol5_Data\PDM\EA\tcpdf";
