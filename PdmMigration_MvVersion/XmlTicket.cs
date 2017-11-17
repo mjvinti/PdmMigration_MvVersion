@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace PdmMigration_MvVersion
@@ -9,8 +10,12 @@ namespace PdmMigration_MvVersion
     {
         public static void JobTicketGenerator(Dictionary<string, List<PdmItem>> dictionary, List<string> batchLines)
         {
-            foreach(KeyValuePair<string, List<PdmItem>> kvp in dictionary)
+            int counter = 0;
+
+            foreach (KeyValuePair<string, List<PdmItem>> kvp in dictionary)
             {
+                counter++;
+                
                 //if there is only one kvp, then we already have a pdf somewhere in theory
                 if (kvp.Value.Count < 2)
                 {
@@ -42,7 +47,7 @@ namespace PdmMigration_MvVersion
 
                 jobTicket.AppendLine("<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>");
                 jobTicket.AppendLine("<?AdlibExpress applanguage = \"USA\" appversion = \"4.11.0\" dtdversion = \"2.6\" ?>");
-                jobTicket.AppendLine("<!DOCTYPE JOBS SYSTEM \"X:\\PDM\\AdlibExpress.dtd\">");
+                jobTicket.AppendLine("<!DOCTYPE JOBS SYSTEM \"" + Program.adlibDTD + "\">");
                 jobTicket.AppendLine("<JOBS xmlns:JOBS=\"http://www.adlibsoftware.com\" xmlns:JOB=\"http://www.adlibsoftware.com\">");
                 jobTicket.AppendLine("<JOB>");
                 jobTicket.AppendLine("<JOB:DOCINPUTS>");
@@ -57,16 +62,18 @@ namespace PdmMigration_MvVersion
                     }
                 }
 
-                foreach(var i in kvp.Value)
+                var orderedItemShtNums = kvp.Value.OrderBy(x => x.ItemShtNum);
+
+                foreach (var i in orderedItemShtNums)
                 {
                     string filename = i.FileName;
 
-                    if (i.FileName.EndsWith(".Z") || i.FileName.EndsWith("._"))
+                    if (filename.EndsWith(".Z") || filename.EndsWith("._"))
                     {
-                        filename = i.FileName.Remove(i.FileName.Length - 2, 2);
+                        filename = filename.Remove(filename.Length - 2, 2);
                     }
 
-                    if (i.FileName.EndsWith(".pra"))
+                    if (filename.EndsWith(".pra"))
                     {
                         filename += ".plt";
                     }
@@ -75,7 +82,7 @@ namespace PdmMigration_MvVersion
                     {
                         if (i.FileDateTime == mostRecentDate)
                         {
-                            jobTicket.AppendLine("<JOB:DOCINPUT FILENAME=\"" + filename + "\" FOLDER =\"" + Program.uncRawPrefix + i.FilePath.Replace("/", "\\") + "\"/>");
+                            jobTicket.AppendLine("<JOB:DOCINPUT FILENAME=\"" + filename + "\" FOLDER=\"" + Program.uncRawPrefix + i.FilePath.Replace("/", "\\") + "\"/>");
                         }
                         else
                         {
@@ -99,8 +106,9 @@ namespace PdmMigration_MvVersion
                 jobTicket.AppendLine("</JOB>");
                 jobTicket.AppendLine("</JOBS>");
 
-                //Console.WriteLine(jobTicket.ToString());
-                File.WriteAllText(Program.jobTicketLocation + mostRecentDate.ToString("yyyy-MM-dd") + "_" + kvp.Key + ".xml", jobTicket.ToString());
+                string jobFileName = Program.jobTicketLocation + mostRecentDate.ToString("yyyy-MM-dd") + "_" + kvp.Key + ".xml";
+                Console.WriteLine(jobFileName);
+                File.WriteAllText(jobFileName, jobTicket.ToString());
             }
             File.WriteAllLines(Program.batchFile, batchLines);
         }

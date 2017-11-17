@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -8,22 +9,57 @@ namespace PdmMigration_MvVersion
 {
     class Program
     {
-        public static string catalogFile = @"C:\Users\mvinti\Desktop\PDM\PdmMigration_Remote_2017-11-03\EA\PDM-Catalog_2017-11-01.csv";
-        public static string inputFile = @"C:\Users\mvinti\Desktop\PDM\PdmMigration_Remote_2017-11-03\EA\EA_2017-11-01.txt";
-        public static string batchFile = @"C:\Users\mvinti\Desktop\PDM\PdmMigration_Remote_2017-11-03\EA\singlePdfCopy.bat";
-        public static string serverName = "pdm.moog.com";
-        public static string outputFile = @"C:\Users\mvinti\Desktop\PDM\PdmMigration_Remote_2017-11-03\EA\EA_import2_2017-11-01.txt";
-        public static string misfitToys = @"C:\Users\mvinti\Desktop\PDM\PdmMigration_Remote_2017-11-03\EA\EA_importMisfits2_2017-11-01.txt";
-        public static string jobTicketLocation = @"C:\Users\mvinti\Desktop\PDM\PdmMigration_Remote_2017-11-03\EA\jobTickets\";
-        public static string uncRawPrefix = @"\\eacmpnas01.moog.com\Vol5_Data\PDM\EA";
-        public static string uncPdfPrefix = @"\\eacmpnas01.moog.com\Vol5_Data\PDM\EA\tcpdf";
+        public static string catalogFile = @"";
+        public static string inputFile = @"";
+        public static string batchFile = @"";
+        public static string serverName = "";
+        public static string outputFile = @"";
+        public static string misfitToys = @"";
+        public static string jobTicketLocation = @"";
+        public static string uncRawPrefix = @"";
+        public static string uncPdfPrefix = @"";
+        public static string adlibDTD = @"";
         public static DateTime recentDateTime = DateTime.MinValue;
         public static bool isWindows = false;
         public static bool isLuDateTime = false;
         public static bool isIeDateTime = false;
 
+        public static void LoadConfig()
+        {
+            catalogFile = ConfigurationManager.AppSettings["catalogFile"];
+            inputFile = ConfigurationManager.AppSettings["inputFile"];
+            batchFile = ConfigurationManager.AppSettings["batchFile"];
+            serverName = ConfigurationManager.AppSettings["serverName"];
+            outputFile = ConfigurationManager.AppSettings["outputFile"];
+            misfitToys = ConfigurationManager.AppSettings["misfitToys"];
+            jobTicketLocation = ConfigurationManager.AppSettings["jobTicketLocation"];
+            uncRawPrefix = ConfigurationManager.AppSettings["uncRawPrefix"];
+            uncPdfPrefix = ConfigurationManager.AppSettings["uncPdfPrefix"];
+            adlibDTD = ConfigurationManager.AppSettings["adlibDTD"];
+            recentDateTime = DateTime.Parse(ConfigurationManager.AppSettings["recentDateTime"]);
+            isWindows = Convert.ToBoolean(ConfigurationManager.AppSettings["isWindows"]);
+            isLuDateTime = Convert.ToBoolean(ConfigurationManager.AppSettings["isLuDateTime"]);
+            isIeDateTime = Convert.ToBoolean(ConfigurationManager.AppSettings["isIeDateTime"]);
+
+            Console.WriteLine(catalogFile);
+            Console.WriteLine(inputFile);
+            Console.WriteLine(batchFile);
+            Console.WriteLine(serverName);
+            Console.WriteLine(outputFile);
+            Console.WriteLine(misfitToys);
+            Console.WriteLine(jobTicketLocation);
+            Console.WriteLine(uncRawPrefix);
+            Console.WriteLine(uncPdfPrefix);
+            Console.WriteLine(recentDateTime.ToString());
+            Console.WriteLine(isWindows);
+            Console.WriteLine(isLuDateTime);
+            Console.WriteLine(isIeDateTime);
+        }
+
         static void Main(string[] args)
         {
+            LoadConfig();
+
             Dictionary<string, List<PdmItem>> dictionary = new Dictionary<string, List<PdmItem>>();
             Hashtable pdmCatalogTable = PdmHashtable.LoadPdmCatalog();
             List<string> delimitedDataField = new List<string> { "FILE_SIZE,LAST_ACCESSED,ITEM,REV,SHEET,SERVER,UNC_RAW,UNC_PDF" };
@@ -92,7 +128,7 @@ namespace PdmMigration_MvVersion
             File.WriteAllLines(outputFile, delimitedDataField);
 
             //generate XML job tickets
-            //XmlTicket.JobTicketGenerator(dictionary, batchLines);
+            XmlTicket.JobTicketGenerator(dictionary, batchLines);
         }
     }
 }

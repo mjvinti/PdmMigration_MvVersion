@@ -33,6 +33,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -42,8 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IsExtension.cs" />
-    <Compile Include="IsExtPdfAble.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="PdmHashtable.cs" />
     <Compile Include="PdmItem.cs" />
     <Compile Include="Program.cs" />

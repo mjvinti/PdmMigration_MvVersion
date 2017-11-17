@@ -17,6 +17,7 @@ namespace PdmMigration_MvVersion
         public string ItemRev { get; set; }
         public string ItemExt { get; set; }
         public string ItemSht { get; set; }
+        public int ItemShtNum { get; set; }
         public bool HasRev { get; set; }
         public bool HasSht { get; set; }
         public bool HasExt { get; set; }
@@ -78,7 +79,7 @@ namespace PdmMigration_MvVersion
                     PdfAbleFileName = FileName.Remove(FileName.Length - 2, 2);
                 }
 
-                PdfAble = IsExtPdfAble.IsPdfAble(PdfAbleFileName);
+                PdfAble = Extensions.IsPdfAble(PdfAbleFileName);
 
                 string[] dataFileSplit = FilePathName.Split('.');
 
@@ -95,7 +96,7 @@ namespace PdmMigration_MvVersion
                 }
                 else if (dataFileSplit.Length > 2)
                 {
-                    if (!IsExtension.IsExt(dataFileSplit[1]))
+                    if (!Extensions.IsExt(dataFileSplit[1]))
                     {
                         HasRev = true;
                         ItemRev = dataFileSplit[1];
@@ -106,7 +107,7 @@ namespace PdmMigration_MvVersion
                         ItemExt = dataFileSplit[1];
                     }
 
-                    if (!IsExtension.IsExt(dataFileSplit[2]))
+                    if (!Extensions.IsExt(dataFileSplit[2]))
                     {
                         HasSht = true;
                         ItemSht = dataFileSplit[2];
@@ -117,7 +118,7 @@ namespace PdmMigration_MvVersion
                         ItemExt = dataFileSplit[2];
                     }
 
-                    if (dataFileSplit.Length > 3 && IsExtension.IsExt(dataFileSplit[3]))
+                    if (dataFileSplit.Length > 3 && Extensions.IsExt(dataFileSplit[3]))
                     {
                         HasExt = true;
                         ItemExt = dataFileSplit[3];
@@ -173,7 +174,7 @@ namespace PdmMigration_MvVersion
                     PdfAbleFileName = FileName.Remove(FileName.Length - 2, 2);
                 }
 
-                PdfAble = IsExtPdfAble.IsPdfAble(PdfAbleFileName);
+                PdfAble = Extensions.IsPdfAble(PdfAbleFileName);
 
                 string[] linuxDataFileSplit = FilePathName.Split('.');
 
@@ -190,7 +191,7 @@ namespace PdmMigration_MvVersion
                 }
                 else if (linuxDataFileSplit.Length > 2)
                 {
-                    if (!IsExtension.IsExt(linuxDataFileSplit[1]))
+                    if (!Extensions.IsExt(linuxDataFileSplit[1]))
                     {
                         HasRev = true;
                         ItemRev = linuxDataFileSplit[1];
@@ -201,7 +202,7 @@ namespace PdmMigration_MvVersion
                         ItemExt = linuxDataFileSplit[1];
                     }
 
-                    if (!IsExtension.IsExt(linuxDataFileSplit[2]))
+                    if (!Extensions.IsExt(linuxDataFileSplit[2]))
                     {
                         HasSht = true;
                         ItemSht = linuxDataFileSplit[2];
@@ -212,7 +213,7 @@ namespace PdmMigration_MvVersion
                         ItemExt = linuxDataFileSplit[2];
                     }
 
-                    if (linuxDataFileSplit.Length > 3 && IsExtension.IsExt(linuxDataFileSplit[3]))
+                    if (linuxDataFileSplit.Length > 3 && Extensions.IsExt(linuxDataFileSplit[3]))
                     {
                         HasExt = true;
                         ItemExt = linuxDataFileSplit[3];
@@ -231,6 +232,21 @@ namespace PdmMigration_MvVersion
                     IsMisfit = true;
                 }
             }
+        }
+
+        public int ExtractNumSht(string itemSht)
+        {
+            StringBuilder sheetbuilder = new StringBuilder();
+
+            foreach (char i in itemSht)
+            {
+                if (i >= '0' && i <= '9')
+                {
+                    sheetbuilder.Append(i);
+                }
+            }
+
+            return Int32.Parse(sheetbuilder.ToString());
         }
 
         public string GetOutputLine()
