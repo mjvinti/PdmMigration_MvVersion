@@ -9,16 +9,30 @@ namespace PdmMigration_MvVersion
         {
             StringBuilder uncRawPathName = new StringBuilder();
 
-            if (filePath.EndsWith(".Z"))
+            if (filePath.EndsWith("._") || filePath.EndsWith(".Z"))
             {
                 filePath = filePath.Remove(filePath.Length - 2);
             }
 
             uncRawPathName.Append(uncRawPrefix);
-            uncRawPathName.Append(filePath);
-            uncRawPathName.Replace('/', '\\');
 
-            return uncRawPathName.ToString();
+            if (filePath[1] == ':')
+            {
+                uncRawPathName.Append(filePath.Remove(0, 2));
+            }
+            else if (filePath.StartsWith("\\\\slctce02"))
+            {
+                uncRawPathName.Append(filePath.Remove(0, 10));
+            }
+            else
+            {
+                uncRawPathName.Append(filePath);
+            }
+
+            uncRawPathName.Replace('/', '\\');
+            string uncRaw = uncRawPathName.ToString();
+
+            return uncRaw;
         }
 
         public static string BuildUncPdfPath(string uncPdfPrefix, string itemName, string itemRev)

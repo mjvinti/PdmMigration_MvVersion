@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 
@@ -55,12 +56,12 @@ namespace PdmMigration_MvVersion
 
                 if (Program.isLuDateTime)
                 {
-                    FileDateTime = DateTime.ParseExact(windowsData[1] + ' ' + windowsData[2], "dd.MM.yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+                    FileDateTime = DateTime.ParseExact(windowsData[1] + ' ' + windowsData[2], "dd.MM.yyyy HH:mm:ss", CultureInfo.CreateSpecificCulture("en-US"));
                     FilePathName = windowsData[3];
                 }
                 else if (Program.isIeDateTime)
                 {
-                    FileDateTime = DateTime.ParseExact(windowsData[1] + ' ' + windowsData[2], "dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+                    FileDateTime = DateTime.ParseExact(windowsData[1] + ' ' + windowsData[2], "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
                     FilePathName = windowsData[3];
                 }
                 else
@@ -111,6 +112,7 @@ namespace PdmMigration_MvVersion
                     {
                         HasSht = true;
                         ItemSht = dataFileSplit[2];
+                        ItemShtNum = ExtractNumSht(ItemSht);
                     }
                     else
                     {
@@ -144,6 +146,13 @@ namespace PdmMigration_MvVersion
                 List<string> linuxData = line.Split(' ').ToList();
                 linuxData.RemoveAll(String.IsNullOrEmpty);
                 linuxData.RemoveRange(0, 4);
+
+                //if there was whitespace in filename, join back together, remove last item in array
+                if (linuxData.Count == 6)
+                {
+                    linuxData[4] = String.Join(" ", linuxData[4], linuxData[5]);
+                    linuxData.Remove(linuxData[5]);
+                }
 
                 FileSize = Convert.ToInt64(linuxData[0]);
                 FileMonth = linuxData[1];
@@ -206,6 +215,7 @@ namespace PdmMigration_MvVersion
                     {
                         HasSht = true;
                         ItemSht = linuxDataFileSplit[2];
+                        ItemShtNum = ExtractNumSht(ItemSht);
                     }
                     else
                     {
@@ -236,6 +246,11 @@ namespace PdmMigration_MvVersion
 
         public int ExtractNumSht(string itemSht)
         {
+            if (!itemSht.Any(c => char.IsDigit(c)))
+            {
+                return 0;
+            }
+
             StringBuilder sheetbuilder = new StringBuilder();
 
             foreach (char i in itemSht)

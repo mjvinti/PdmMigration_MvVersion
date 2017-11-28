@@ -10,12 +10,8 @@ namespace PdmMigration_MvVersion
     {
         public static void JobTicketGenerator(Dictionary<string, List<PdmItem>> dictionary, List<string> batchLines)
         {
-            int counter = 0;
-
             foreach (KeyValuePair<string, List<PdmItem>> kvp in dictionary)
-            {
-                counter++;
-                
+            {   
                 //if there is only one kvp, then we already have a pdf somewhere in theory
                 if (kvp.Value.Count < 2)
                 {
